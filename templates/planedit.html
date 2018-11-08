@@ -1,0 +1,60 @@
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='Plan_analyst.css')}}">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <title>name={{ name }}_Plan_Analyst</title>
+</head>
+
+
+<div class="table-responsive">
+ <form action="{{ url_for('editplan',id=name) }}"" method="POST">
+
+  <div>
+  	<table class="table table-condensed table-striped table-hover">
+
+  	  <thead>
+       <tr>
+        <th>Plan Id</th>
+        <th>Plan Name</th>
+        <th>Cost(₹)</th>
+        <th>Validity(days)</th>
+        <th>Talktime(₹)</th>
+        <th>SMS per day</th>
+        <th>Data(Gb/day)</th>
+       </tr>
+     </thead>
+
+     <tbody>
+      {% for r in result %}
+     	<tr>
+     		<td><input type="text" name="plan_id" placeholder="Plan Id" value={{ r[0] }} readonly></td>
+     		<td><input type="text" name="planname" placeholder="Plan Name" value={{ r[1] }} readonly></td>
+     		<td><input type="number" name="cost" placeholder="Cost" value={{ r[2] }} required></td>
+     		<td><input type="number" name="validity" placeholder="Validity" value={{ r[3] }} required></td>
+     		<td><input type="number" name="talktime" placeholder="Talktime" value={{ r[4] }} required></td>
+     		<td><input type="number" name="sms" placeholder="SMS per day" value={{ r[5] }} required></td>
+     		<td><input type="number" name="data" placeholder="Data" value={{ r[6] }} required></td>
+     	</tr>
+      {% endfor %}
+     </tbody>	
+
+  	</table>
+
+  </div>
+  <br>
+
+  <div>
+    <br>
+    <input type="submit" name="change" value="Delete this Plan" class="chadel">
+    <input type="submit" name="change" value="Change details" class="chadel">
+  </div>
+  
+ </form>
+</div>
+
+
+</body>
+</html>

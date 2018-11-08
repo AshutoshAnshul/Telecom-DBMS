@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>name={{ name }}_Sales_Department</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='Sales.css')}}">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+	<div id="old">
+<form action="{{ url_for('kioskchange',id=name) }}" class="form-inline" method="POST">
+	<br>
+	<div class="form-group"><input type="text" name="kioskid" class="form-control" value={{ kioskid }} readonly></div>
+	<div class="form-group">
+		<br>
+	 <select class="form-control" name="oldcontact">
+	 	<option>Old Contacts</option>
+		{% for item in data %}
+		<option>{{ item[0] }}</option>
+		{% endfor %}
+	 </select>
+	</div>
+	<div class="form-group"><input type="number" name="newcontact" placeholder="New Contact_no" class="form-control" required></div>
+	<div class="form-group"><input type="submit" name="" value="Change" class="form-control"></div>
+</form>
+</div>
+<br>
+
+</body>
+</html>

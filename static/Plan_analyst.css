@@ -1,0 +1,56 @@
+.table-responsive
+{
+	width: 80% !important;
+	margin-left: 120px !important;
+}
+
+.table
+{
+	background-color: #fff;
+}
+
+.form-control
+{
+	width: 40% !important;
+	margin-left: 360px;
+}
+
+.form-group input[type="submit"]
+{
+	background-color: #004080;
+	color: #fff;
+}
+
+.chadel
+{
+	height: 40px !important;
+	width: 20% !important;
+	margin-left: 300px;
+	border-radius: 5px !important;
+	background-color: #004080;
+	color: #fff;
+}
+
+body
+{
+  margin:0;
+  padding:0;
+  background: url(login.jpg);
+  background-size: cover;
+}
+
+p
+{
+	font-size: 22px;
+	font-weight: bold;
+    color: #ffffff;
+    margin-left: 40px !important;
+}
+
+button
+{
+	align-self: center !important;
+	margin-left: 425px !important;
+	position: relative !important;
+}
+

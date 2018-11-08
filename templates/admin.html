@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>name={{ name }}_Admin</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='admin.css')}}">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">   
+</head>
+<body>
+	<button class="btn btn-primary btn-md btn btn-primary active" id="edit" data-toggle="collapse" data-target="#getempid">>Manage Employee</button>
+	<button class="btn btn-primary btn-md btn btn-primary active" id="add" data-toggle="collapse" data-target="#add">Add Employye</button>
+
+<div class="collapse" id="getempid">
+ <form class="form-inline" action="{{ url_for('showplan',id=name) }}" method="POST">
+  <br>
+  <div class="form-group"><input type="text" name="planid" placeholder="Employee Id" class="form-control" required></div>
+  <div class="form-group"><input type="submit" name="" value="Edit" class="form-control"></div>
+ </form>
+</div>
+
+
+
+	<div class="collapse" id="add">
+ 	<form action="{{ url_for('add',id=name) }}" method="POST">
+
+  <div>
+    <br>
+    <table class="table table-condensed table-striped table-hover table-responsive">
+
+      <thead>
+       <tr>
+        <th>Employee Id</th>
+        <th>Plan Name</th>
+        <th>Cost(₹)</th>
+        <th>Validity(days)</th>
+        <th>Talktime(₹)</th>
+        <th>SMS per day</th>
+        <th>Data(Gb/day)</th>
+       </tr>
+     </thead>
+
+     <tbody>
+
+      <tr>
+        <td><input type="text" name="planid" placeholder="Plan Id" required></td>
+        <td><input type="text" name="planname" placeholder="Plan Name" required></td>
+        <td><input type="number" name="cost" placeholder="Cost" required></td>
+        <td><input type="number" name="validity" placeholder="Validity" required></td>
+        <td><input type="number" name="talktime" placeholder="Talktime" required></td>
+        <td><input type="number" name="sms" placeholder="SMS per day" required></td>
+        <td><input type="number" name="data" placeholder="Data" required></td>
+      </tr>
+
+     </tbody> 
+
+    </table>
+
+  </div>
+  <br>
+
+  <div>
+    <br>
+    <input type="submit" name="" value="Add" class="chadel">
+  </div>
+  
+ </form>
+</div>
+</body>
+</html>

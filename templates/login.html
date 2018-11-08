@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>Santu Telecom</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='Login_page.css')}}">   
+<body>
+	<div class="loginbox">
+		{% if error %}
+        <p><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
+		<img src="{{ url_for('static' , filename='avtar.jpg')}}" class="avatar">
+		<h1>SANTU TELECOMS</h1>
+		<h2>Login Here</h2>
+		<form action="/login" method="POST">
+			<p>Employee Id</p>
+			<input type="text" name="usern" placeholder="Employee Id" required>
+			<p>Password</p>
+			<input type="Password" name="passw" placeholder="Password" required>
+			<br>
+			<input type="submit" name="" value="Login">
+		</form>
+	</div>
+</body>
+</head>
+</html> 

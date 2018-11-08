@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='Plan_analyst.css')}}">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<title>name={{ name }}_Plan_Analyst</title>
+</head>
+
+<body>
+  <p>Exisiting Plans:</p>
+
+  <div class="table-responsive">
+
+  	<table class="table table-condensed table-striped table-hover">
+
+  	  <thead>
+       <tr>
+        <th>Plan Id</th>
+        <th>Plan Name</th>
+        <th>Cost(₹)</th>
+        <th>Validity(days)</th>
+        <th>Talktime(₹)</th>
+        <th>SMS per day</th>
+        <th>Data(Gb/day)</th>
+       </tr>
+     </thead>
+
+     <tbody>
+      {% for item in data %}
+     	<tr>
+     		<td>{{ item[0] }}</td>
+     		<td>{{ item[1] }}</td>
+     		<td>{{ item[2] }}</td>
+     		<td>{{ item[3] }}</td>
+     		<td>{{ item[4] }}</td>
+     		<td>{{ item[5] }}</td>
+     		<td>{{ item[6] }}</td>
+     	</tr>
+     </tbody>	
+     {% endfor %}
+  	</table>
+
+  </div>
+
+  <button class="btn btn-primary btn-md btn btn-primary active" id="edit" data-toggle="collapse" data-target="#getid">Edit Plan</button>
+  <button class="btn btn-primary btn-md btn btn-primary active" id="add" data-toggle="collapse" data-target="#editoradd">Add Plan</button>
+
+<div class="collapse" id="getid">
+ <form class="form-inline" action="{{ url_for('showplan',id=name) }}" method="POST">
+  <br>
+  <div class="form-group"><input type="text" name="planid" placeholder="Plan Id" class="form-control" required></div>
+  <div class="form-group"><input type="submit" name="" value="Edit" class="form-control"></div>
+ </form>
+</div>
+   <br>
+
+ <div class="collapse" id="editoradd">
+ <form action="{{ url_for('add',id=name) }}" method="POST">
+
+  <div>
+    <br>
+    <table class="table table-condensed table-striped table-hover table-responsive">
+
+      <thead>
+       <tr>
+        <th>Plan Id</th>
+        <th>Plan Name</th>
+        <th>Cost(₹)</th>
+        <th>Validity(days)</th>
+        <th>Talktime(₹)</th>
+        <th>SMS per day</th>
+        <th>Data(Gb/day)</th>
+       </tr>
+     </thead>
+
+     <tbody>
+
+      <tr>
+        <td><input type="text" name="planid" placeholder="Plan Id" required></td>
+        <td><input type="text" name="planname" placeholder="Plan Name" required></td>
+        <td><input type="number" name="cost" placeholder="Cost" required></td>
+        <td><input type="number" name="validity" placeholder="Validity" required></td>
+        <td><input type="number" name="talktime" placeholder="Talktime" required></td>
+        <td><input type="number" name="sms" placeholder="SMS per day" required></td>
+        <td><input type="number" name="data" placeholder="Data" required></td>
+      </tr>
+
+     </tbody> 
+
+    </table>
+
+  </div>
+  <br>
+
+  <div>
+    <br>
+    <input type="submit" name="" value="Add" class="chadel">
+  </div>
+  
+ </form>
+</div>
+
+</body>
+</html>
