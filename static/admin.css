@@ -5,3 +5,46 @@ body
   background: url(login.jpg);
   background-size: cover;
 }
+
+.table-responsive
+{
+	width: 80% !important;
+	margin-left: 120px !important;
+}
+
+.table
+{
+	background-color: #fff;
+}
+
+.form-group input[type="submit"]
+{
+	border: none;
+	outline: none;
+	width:60%;
+	text-align: center;
+	padding: 0px;
+	height: 40px;
+	background: #fb2525;
+	color: #fff;
+	font-size: 18px;
+	border-radius: 20px;
+}
+
+.form-group a
+{
+	background-color: #004080 !important;
+	color: #fff !important;
+}
+
+.chadel
+{
+	height: 40px !important;
+	width: 10% !important;
+	margin-left: 600px;
+	border-radius: 5px !important;
+	background-color: #004080;
+	color: #fff;
+}
+
+

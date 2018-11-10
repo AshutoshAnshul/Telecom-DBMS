@@ -10,6 +10,24 @@
 </head>
 
 <body>
+
+{% if name!='A401' %}
+  <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{{ url_for('login') }}">Santu Telecoms</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#getid" data-toggle="collapse">Edit Plan</a></li>
+      <li><a href="#editoradd" data-toggle="collapse">Add Plan</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span>Change Password</a></li>
+    </ul>
+  </div>
+</nav>
+{% endif %}
   <p>Exisiting Plans:</p>
 
   <div class="table-responsive">
@@ -45,8 +63,6 @@
 
   </div>
 
-  <button class="btn btn-primary btn-md btn btn-primary active" id="edit" data-toggle="collapse" data-target="#getid">Edit Plan</button>
-  <button class="btn btn-primary btn-md btn btn-primary active" id="add" data-toggle="collapse" data-target="#editoradd">Add Plan</button>
 
 <div class="collapse" id="getid">
  <form class="form-inline" action="{{ url_for('showplan',id=name) }}" method="POST">

@@ -32,6 +32,8 @@ def login():
 						return render_template("customer.html",name=username,data=None,result=None,phone=None)
 					elif username[0]=='S':
 						return redirect(url_for('showkiosk',id=username))
+					elif username[0]=='A':
+						return redirect(url_for('admin',id=username))
 					else :
 						error='Invalid username. Please try again'
 				else :
@@ -40,8 +42,6 @@ def login():
 			error='Invalid username. Please try again'
 	return render_template("login.html",error=error)
 
-
-@app.route("/plan",methods=['GET','POST'])
 @app.route("/plan/<id>",methods=['GET','POST'])
 def showplan(id):
 	if request.method=='POST':
@@ -59,7 +59,6 @@ def showplan(id):
 		data= cursor.fetchall()
 		return render_template("plan.html",name=id,data=data)
 
-@app.route("/planadded",methods=['POST'])
 @app.route("/planadded/<id>",methods=['POST'])
 def add(id):
 	if request.method=='POST':
@@ -82,7 +81,6 @@ def add(id):
 			connection.commit()
 		return redirect(url_for('showplan',id=id))
 
-@app.route("/planedit",methods=['POST'])
 @app.route("/planedit/<id>",methods=['POST'])
 def editplan(id):
 	if request.method=='POST':
@@ -102,7 +100,6 @@ def editplan(id):
 			connection.commit()
 		return redirect(url_for('showplan',id=id))
 
-@app.route("/sales",methods=['GET','POST'])
 @app.route("/sales/<id>",methods=['GET','POST'])
 def showkiosk(id):
 	if request.method=='POST':
@@ -120,13 +117,15 @@ def showkiosk(id):
 			cursor.execute(query)
 			connection.commit()
 			return redirect(url_for('showkiosk',id=id))
-	query=("select kiosk.*,contact,sim,landline,router from kiosk,kioskcontact,kioskstock where kiosk.kioskid=kioskcontact.kioskid and kiosk.kioskid=kioskstock.kioskid and kiosk.kioskid in(Select kioskid from handles where employeeid='"+id+"');")
+	if id=='A401':
+		query=("select kiosk.*,contact,sim,landline,router from kiosk,kioskcontact,kioskstock where kiosk.kioskid=kioskcontact.kioskid and kiosk.kioskid=kioskstock.kioskid")
+	else:
+		query=("select kiosk.*,contact,sim,landline,router from kiosk,kioskcontact,kioskstock where kiosk.kioskid=kioskcontact.kioskid and kiosk.kioskid=kioskstock.kioskid and kiosk.kioskid in(Select kioskid from handles where employeeid='"+id+"');")
 	cursor.execute(query)
 	data= cursor.fetchall()
 	print(data)
 	return render_template("sales.html",name=id,data=data)
 
-@app.route("/kioskchange",methods=['POST'])
 @app.route("/kioskchange/<id>",methods=['POST'])
 def kioskchange(id):
 	if request.method=='POST':
@@ -142,7 +141,6 @@ def kioskchange(id):
 		return redirect(url_for('showkiosk',id=id))
 
 
-@app.route("/customer",methods=['POST'])
 @app.route("/customer/<id>",methods=['POST'])
 def showcustomer(id):
 	if request.method=='POST':
@@ -181,6 +179,85 @@ def showcustomer(id):
 		return render_template("customer.html",name=id,data=data,result=result,phone=phone)
 
 
+@app.route("/admin/<id>",methods=['GET','POST'])
+def admin(id):
+	if request.method=='POST':
+		name=request.form['name']
+		post=request.form['post']
+		region=request.form['region']
+		salary=request.form['salary']
+		house=request.form['houseno']
+		locality=request.form['locality']
+		city=request.form['city']
+		pin=request.form['pin']
+		state=request.form['state']
+		contact=request.form['contact']
+		pan=request.form['pan']
+		email=request.form['email']
+	manage=None;add=None;
+	query=("Select count(*) from customers")
+	cursor.execute(query)
+	result=cursor.fetchall()
+	noc=result[0][0]
+	query=("Select count(*) from employee")
+	cursor.execute(query)
+	result=cursor.fetchall()
+	noe=result[0][0]
+	query=("Select count(*) from kiosk")
+	cursor.execute(query)
+	result=cursor.fetchall()
+	nok=result[0][0]
+	query=("Select sum(cost) from customers,plan where customers.planid=plan.planid")
+	cursor.execute(query)
+	result=cursor.fetchall()
+	rev=result[0][0]
+	if request.form.get("navg","nothing")=='manage':
+		manage="manage"
+		print(manage)
+	if request.form.get("navg","nothing")=='add':
+		add="add"
+		print(add)
+	return render_template("admin.html",name=id,noc=noc,noe=noe,nok=nok,rev=rev,manage=manage,add=add)	
+
+@app.route("/admin-manage/<id>",methods=['GET','POST'])
+def manage(id):
+	result=None;
+	if request.method=='POST':
+		if request.form.get("manage","nothing")=="Show":
+			employeeid=request.form['empid']
+			query=("Select * from employee where employeeid='"+employeeid+"'")
+			cursor.execute(query)
+			result=cursor.fetchall()
+			print(result[0][1])
+			return render_template("admin_manage.html",name=id,result=result,eid=employeeid)
+		if request.form.get("update","nothing")=="Update":
+			employeeid=request.form['empid']
+			region=request.form['reg']
+			salary=request.form['sal']
+			address=list(map(str,request.form['address'].split(",")))
+			query=("update employee set region='"+region+"',salary='"+salary+"',house_no="+address[0]+",locality='"+address[1]+"',cityorvillage='"+address[2]+"',pincode="+address[3]+",state='"+address[4]+"' where employeeid='"+employeeid+"'")
+			print(query)
+			cursor.execute(query)
+			connection.commit()
+			query=("Select * from employee where employeeid='"+employeeid+"'")
+			cursor.execute(query)
+			result=cursor.fetchall()
+			return render_template("admin_manage.html",name=id,result=result,eid=employeeid)
+	return render_template("admin_manage.html",name=id,result=result)	
+
+@app.route("/admin-add/<id>",methods=['GET','POST'])
+def addemp(id):
+	if request.method=='POST':
+		name=request.form['name']
+		post=request.form['post']
+		region=request.form['reg']
+		salary=request.form['sal']
+		contacts=list(map(str,request.form['con'].split(",")))
+		address=list(map(str,request.form['address'].split(",")))
+		pan=request.form['pan']
+		email=request.form['email']
+		
+	return render_template("admin_add.html",name=id)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+    .adminbox
+  {
+     height: 550px !important;
+    width: 1000px !important;
+    color: #fff !important;
+    background-color: black !important;
+    background-image: linear-gradient(black, grey);
+    top: 15% !important;
+    left: 15% !important;
+    padding: 20px 30px !important;
+    position: absolute !important;
+    overflow-y: auto;
+  }
+
+  .left
+  {
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 30%;
+    color: #ffffff;
+  }
+
+  .adminbox .form-control
+	{
+	width: 40% !important;
+	margin-left: 200px;
+	}
+
+  </style>
+	<title>name={{ name }}_Admin</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='admin.css')}}">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
+</head>
+<body>
+
+	<nav class="navbar navbar-default">
+  	<div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{{ url_for('login')}}">Santu Telecoms</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="{{ url_for('admin',id=name) }}">Home</a></li>
+      <li class="active"><a href="#">Manage Employee</a></li>
+      <li><a href="{{ url_for('addemp',id=name) }}">Add Employee</a></li>
+      <li><a href="{{ url_for('showplan',id=name) }}">View Plans</a></li>
+      <li><a href="{{ url_for('showkiosk',id=name) }}">View Kiosks</a></li>
+      <li><a href="#">View Customers</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span>Change Password</a></li>
+    </ul>
+  	</div>
+	</nav>
+
+	<div class="adminbox" >
+ 		<form class="form-horizontal" action="{{ url_for('manage',id=name) }}" method="POST">
+  		<br>
+  		<div class="form-group">
+      <input type="text" name="empid" placeholder="Employee Id" class="form-control" {% if eid %}value="{{ eid }}"{% endif %} required>
+      <br>
+  		<input type="submit" name="manage" value="Show" class="form-control">
+      </div>
+ 
+
+  {% if result %}
+      <br>
+      <div class="form-group">
+        <br>
+        <label class="control-label col-sm-2">Name:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="name" value="{{ result[0][1] }}" readonly>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2">Post:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="post" value="{{ result[0][2] }}" readonly>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2">Joining Date:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="join" value="{{ result[0][3] }}" readonly>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2">Region:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="reg" value="{{ result[0][4] }}" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2">Salary:</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" name="sal" value="{{ result[0][5] }}" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2">Address:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="address" value="{{ result[0][6] }},{{ result[0][7] }},{{ result[0][8] }},{{ result[0][9] }},{{ result[0][10] }}" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2">Pan No:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="pan" value="{{ result[0][11] }}" readonly>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2">Email:</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" name="email" value="{{ result[0][12] }}" readonly>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="submit" name="update" value="Update" class="form-control">
+      </div>
+    </form>
+  {% endif %}
+
+	</div>
+
+</body>
+</html>
