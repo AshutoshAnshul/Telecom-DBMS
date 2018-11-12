@@ -3,6 +3,10 @@
 
 <head>
 	<title>name={{ name }}_Customer_Department</title>
+  <style>
+    
+
+  </style>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='Customers.css')}}">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
@@ -10,10 +14,32 @@
 <body>
 
  <form class="form-inline" action="{{ url_for('showcustomer',id=name) }}" method="POST">
-  <br>
-  <div class="form-group"><input type="text" name="phone" placeholder="Phone no" class="form-control" {% if phone %}value={{ phone }}{% endif %} required>
+
+  <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{{ url_for('login') }}">Santu Telecoms</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li>
+        <div class="input-group"><input type="text" name="phone" placeholder="Phone no" class="form-control" {% if phone %}value={{ phone }}{% endif %} required>
+        </div>
+      </li>
+      <li>
+        <button class="btn btn-default" type="submit">
+          <i class="glyphicon glyphicon-search"></i>
+        </button>
+      </li>
+    </ul>
   </div>
-  <div class="form-group"><input type="submit" name="" value="Show Details" class="form-control"></div>
+</nav>
+
+
+
+
+  <br>
+
 
   <div id="custdetails">
   <div class="table-responsive">
@@ -66,20 +92,26 @@
   </div>
 </div>
 
+{% if name!='A401' %}
   <div class="form-group"><input type="submit" name="dec" value="Deactivate/Activate" class="form-control"></div>
   <div class="form-group"><input type="submit" name="dec" value="Change Plan" class="form-control"></div>
-  <br>
+  <br><br>
+  {% if result %}
+  <div>
  	<div class="form-group"><input list="plans" name="plan" class="form-control">
+    <br>
     <datalist id="plans">
-      {% if result %}
       {% for r in result %}
-      <option value={{ r[0] }}>
+      <option value={{ r[0] }}></option>
       {% endfor %}
-      {% endif %}
     </datalist>
   </div>
  	<div class="form-group"><input type="submit" name="new plan" value="Change" class="form-control"></div>
+ </div>
+ {% endif %}
+{% endif %}
  </form>
+}
  
 
 </body>

@@ -47,10 +47,7 @@
       <li><a href="{{ url_for('addemp',id=name) }}">Add Employee</a></li>
       <li><a href="{{ url_for('showplan',id=name) }}">View Plans</a></li>
       <li><a href="{{ url_for('showkiosk',id=name) }}">View Kiosks</a></li>
-      <li><a href="#">View Customers</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li><a href="#"><span class="glyphicon glyphicon-user"></span>Change Password</a></li>
+      <li><a href="{{ url_for('showcustomer',id=name) }}">View Customers</a></li>
     </ul>
   </div>
 </nav>

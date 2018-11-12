@@ -1,4 +1,6 @@
 from flask import Flask,flash,redirect, render_template, request, url_for
+import string
+from random import *
 import mysql.connector
 try:
 	connection=mysql.connector.connect(user='root',password='12345',host='localhost',database='project')
@@ -29,7 +31,7 @@ def login():
 					if username[0]=='P':
 						return redirect(url_for('showplan',id=username))	
 					elif username[0]=='C':
-						return render_template("customer.html",name=username,data=None,result=None,phone=None)
+						return redirect(url_for('showcustomer',id=username))
 					elif username[0]=='S':
 						return redirect(url_for('showkiosk',id=username))
 					elif username[0]=='A':
@@ -141,7 +143,7 @@ def kioskchange(id):
 		return redirect(url_for('showkiosk',id=id))
 
 
-@app.route("/customer/<id>",methods=['POST'])
+@app.route("/customer/<id>",methods=['GET','POST'])
 def showcustomer(id):
 	if request.method=='POST':
 		phone=request.form["phone"]
@@ -177,6 +179,11 @@ def showcustomer(id):
 		cursor.execute(query)
 		data=cursor.fetchall()
 		return render_template("customer.html",name=id,data=data,result=result,phone=phone)
+
+	query=("Select * from customers")
+	cursor.execute(query)
+	data=cursor.fetchall()
+	return render_template("customer.html",name=id,data=data,result=None,phone=None)
 
 
 @app.route("/admin/<id>",methods=['GET','POST'])
@@ -233,12 +240,17 @@ def manage(id):
 		if request.form.get("update","nothing")=="Update":
 			employeeid=request.form['empid']
 			region=request.form['reg']
-			salary=request.form['sal']
+			salary=str(request.form['sal'])
 			address=list(map(str,request.form['address'].split(",")))
-			query=("update employee set region='"+region+"',salary='"+salary+"',house_no="+address[0]+",locality='"+address[1]+"',cityorvillage='"+address[2]+"',pincode="+address[3]+",state='"+address[4]+"' where employeeid='"+employeeid+"'")
-			print(query)
+			query=("Select * from employee where employeeid='"+employeeid+"'")
 			cursor.execute(query)
-			connection.commit()
+			result=cursor.fetchall()
+			if region==result[0][4] and salary==str(result[0][5]) and address[0]==str(result[0][6]) and address[1]==result[0][7] and address[2]==result[0][8] and address[3]==str(result[0][9]) and address[4]==result[0][10] :
+				print("same")
+			else:
+				query=("update employee set region='"+region+"',salary='"+salary+"',house_no="+address[0]+",locality='"+address[1]+"',cityorvillage='"+address[2]+"',pincode="+address[3]+",state='"+address[4]+"' where employeeid='"+employeeid+"'")
+				cursor.execute(query)
+				connection.commit()
 			query=("Select * from employee where employeeid='"+employeeid+"'")
 			cursor.execute(query)
 			result=cursor.fetchall()
@@ -256,7 +268,39 @@ def addemp(id):
 		address=list(map(str,request.form['address'].split(",")))
 		pan=request.form['pan']
 		email=request.form['email']
-		
+		start=None
+		if post=='Plan_Analyst':
+		 start='P'
+		elif post=='Sales_Manager':
+		 start='S'
+		elif post=='Customer_Manager':
+		 start='C'
+		last=None
+		query=("select employeeid from employee where employeeid like '"+start+"%'")
+		cursor.execute(query)
+		res=cursor.fetchall()
+		for r in res :
+		  last=r[0]
+		last=last[1:]
+		lastint=int(last)+1
+		employeeid=start+str(lastint)
+		print(employeeid)
+		query=("Insert into employee values('"+employeeid+"','"+name+"','"+post+"',curdate(),'"+region+"',"+salary+","+address[0]+",'"+address[1]+"','"+address[2]+"',"+address[3]+",'"+address[4]+"','"+pan+"','"+email+"')")
+		cursor.execute(query)
+		connection.commit()
+		count=len(contacts)
+		for i in range(count):
+			query=("Insert into employeecontact values('"+employeeid+"',"+contacts[i]+")")
+			cursor.execute(query)
+			connection.commit()
+		min_char = 8
+		max_char = 12
+		allchar = string.ascii_letters + string.punctuation + string.digits
+		password = "".join(choice(allchar) for x in range(randint(min_char, max_char)))
+		print(password)
+		query=("Insert into login values('"+employeeid+"','"+password+"')")
+		cursor.execute(query)
+		connection.commit()
 	return render_template("admin_add.html",name=id)
 
 

@@ -1,6 +1,22 @@
 <html>
 
 <head>
+  <style>
+    .adminbox
+   {
+     height: 550px !important;
+    width: 1000px !important;
+    color: #fff !important;
+    background-color: black !important;
+    background-image: linear-gradient(black, grey);
+    top: 15% !important;
+    left: 15% !important;
+    padding: 20px 30px !important;
+    position: absolute !important;
+    overflow-y: auto;
+    }
+  </style>
+
   <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='Plan_analyst.css')}}">
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -8,53 +24,69 @@
   <title>name={{ name }}_Plan_Analyst</title>
 </head>
 
+<div class="adminbox">
 
-<div class="table-responsive">
- <form action="{{ url_for('editplan',id=name) }}"" method="POST">
+  <form class="form-horizontal" action="{{ url_for('editplan',id=name) }}" method="POST">
+    {% for r in result %}
+    <div class="form-group">
+        <br>
+        <label class="control-label col-sm-2">Plan Id</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="plan_id" placeholder="Plan Id" value={{ r[0] }} readonly>
+        </div>
+        </div>
 
-  <div>
-  	<table class="table table-condensed table-striped table-hover">
+        <div class="form-group">
+        <label class="control-label col-sm-2">Plan Name:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="planname" placeholder="Plan Name" value={{ r[1] }} readonly>
+        </div>
+        </div>
 
-  	  <thead>
-       <tr>
-        <th>Plan Id</th>
-        <th>Plan Name</th>
-        <th>Cost(₹)</th>
-        <th>Validity(days)</th>
-        <th>Talktime(₹)</th>
-        <th>SMS per day</th>
-        <th>Data(Gb/day)</th>
-       </tr>
-     </thead>
+        <div class="form-group">
+        <label class="control-label col-sm-2">Cost(₹):</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" name="cost" placeholder="Cost" value={{ r[2] }} required>
+        </div>
+        </div>
 
-     <tbody>
-      {% for r in result %}
-     	<tr>
-     		<td><input type="text" name="plan_id" placeholder="Plan Id" value={{ r[0] }} readonly></td>
-     		<td><input type="text" name="planname" placeholder="Plan Name" value={{ r[1] }} readonly></td>
-     		<td><input type="number" name="cost" placeholder="Cost" value={{ r[2] }} required></td>
-     		<td><input type="number" name="validity" placeholder="Validity" value={{ r[3] }} required></td>
-     		<td><input type="number" name="talktime" placeholder="Talktime" value={{ r[4] }} required></td>
-     		<td><input type="number" name="sms" placeholder="SMS per day" value={{ r[5] }} required></td>
-     		<td><input type="number" name="data" placeholder="Data" value={{ r[6] }} required></td>
-     	</tr>
+        <div class="form-group">
+        <label class="control-label col-sm-2">Validity(days):</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" name="validity" placeholder="Validity" value={{ r[3] }} required>
+        </div>
+      </div>
+       <div class="form-group">
+        <label class="control-label col-sm-2">Talktime(₹):</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" name="talktime" placeholder="Talktime" value={{ r[4] }} required>
+        </div>
+        </div>
+
+        <div class="form-group">
+        <label class="control-label col-sm-2">SMS per day:</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" name="sms" placeholder="SMS per day" value={{ r[5] }} required>
+        </div>
+        </div>
+
+        <div class="form-group">
+        <label class="control-label col-sm-2">Data(Gb/day):</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" name="data" placeholder="Data" value={{ r[6] }} required>
+        </div>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" name="change" value="Delete this Plan" class="form-control">
+        </div>
+        <div class="form-group">
+          <input type="submit" name="change" value="Change details" class="form-control">
+        </div>
       {% endfor %}
-     </tbody>	
+    </form>
 
-  	</table>
-
-  </div>
-  <br>
-
-  <div>
-    <br>
-    <input type="submit" name="change" value="Delete this Plan" class="chadel">
-    <input type="submit" name="change" value="Change details" class="chadel">
-  </div>
-  
- </form>
 </div>
-
 
 </body>
 </html>
