@@ -26,7 +26,9 @@
 </nav>
 {% endif %}
   <p>Exisiting Plans:</p>
-
+  {% if error %}
+     <p><strong>Error:</strong> {{ error }}</p>
+  {% endif %}
   <div class="table-responsive">
 
   	<table class="table table-condensed table-striped table-hover">

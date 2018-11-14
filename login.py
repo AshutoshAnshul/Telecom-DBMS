@@ -1,4 +1,5 @@
 from flask import Flask,flash,redirect, render_template, request, url_for
+from datetime import datetime
 import string
 from random import *
 import mysql.connector
@@ -18,10 +19,7 @@ def login():
 	if request.method== 'POST':
 		username=request.form['usern']
 		password=request.form['passw']
-		print(username)
-		print(password)
 		query=("Select password from login where username='"+username+"';")
-		print(query)
 		cursor.execute(query)
 		result= cursor.fetchall()
 		tot=len(result)
@@ -46,20 +44,23 @@ def login():
 
 @app.route("/plan/<id>",methods=['GET','POST'])
 def showplan(id):
+	error=None
 	if request.method=='POST':
 		planid=request.form['planid']
-		query=("Select * from plan where Planid='"+planid+"';")
+		query=("Select * from plan where Planid='"+planid+"' and status='running'")
 		print(query)
 		cursor.execute(query)
 		result=cursor.fetchall()
 		tot=len(result)
 		if tot>0:
 			return render_template("planedit.html",name=id,result=result)
-	else :
-		query=("Select * from plan")
-		cursor.execute(query)
-		data= cursor.fetchall()
-		return render_template("plan.html",name=id,data=data)
+		else:
+			error='Plan deactivated or non-existing!!'
+	
+	query=("Select * from plan where status='running'")
+	cursor.execute(query)
+	data= cursor.fetchall()
+	return render_template("plan.html",name=id,data=data,error=error)
 
 @app.route("/planadded/<id>",methods=['POST'])
 def add(id):
@@ -71,16 +72,9 @@ def add(id):
 		talktime=request.form['talktime']
 		sms=request.form['sms']
 		data=request.form['data']
-		query=("Insert into plan values('"+planid+"','"+planname+"',"+cost+","+validity+","+talktime+","+sms+","+data+");")
+		query=("Insert into plan values('"+planid+"','"+planname+"',"+cost+","+validity+","+talktime+","+sms+","+data+",'running');")
 		cursor.execute(query)
 		connection.commit()
-		query=("Select employeeid,kioskid from employee,kiosk where employee.region=kiosk.region and employee.post='sales_manager'")
-		cursor.execute(query)
-		result=cursor.fetchall()
-		for r in result:
-			query=("Insert into handles values('"+r[0]+"','"+r[1]+"');")
-			cursor.execute(query)
-			connection.commit()
 		return redirect(url_for('showplan',id=id))
 
 @app.route("/planedit/<id>",methods=['POST'])
@@ -97,9 +91,20 @@ def editplan(id):
 			cursor.execute(query)
 			connection.commit()
 		elif request.form["change"]=='Delete this Plan' :
-			query=("Delete from plan where planid='"+planid+"';")
+			query=("Select end_date from customers where planid='"+planid+"' order by end_date desc")
 			cursor.execute(query)
-			connection.commit()
+			result=cursor.fetchall()
+			lastdate=result[0][0]
+			print(type(lastdate))
+			present=datetime.now().date()
+			if lastdate<present :
+				query=("Delete from plan where planid='"+planid+"';")
+				cursor.execute(query)
+				connection.commit()
+			else :
+				query=("Update plan set status='removed' where planid='"+planid+"'")
+				cursor.execute(query)
+				connection.commit()
 		return redirect(url_for('showplan',id=id))
 
 @app.route("/sales/<id>",methods=['GET','POST'])
@@ -125,7 +130,6 @@ def showkiosk(id):
 		query=("select kiosk.*,contact,sim,landline,router from kiosk,kioskcontact,kioskstock where kiosk.kioskid=kioskcontact.kioskid and kiosk.kioskid=kioskstock.kioskid and kiosk.kioskid in(Select kioskid from handles where employeeid='"+id+"');")
 	cursor.execute(query)
 	data= cursor.fetchall()
-	print(data)
 	return render_template("sales.html",name=id,data=data)
 
 @app.route("/kioskchange/<id>",methods=['POST'])
@@ -134,9 +138,6 @@ def kioskchange(id):
 		kioskid=request.form["kioskid"]
 		oldcontact=str(request.form.get('oldcontact'))
 		newcontact=request.form["newcontact"]
-		print(oldcontact)
-		print(newcontact)
-		print(id)
 		query=("update kioskcontact set contact="+newcontact+" where contact="+oldcontact+" and kioskid='"+kioskid+"';")
 		cursor.execute(query)
 		connection.commit()
@@ -161,7 +162,7 @@ def showcustomer(id):
 			connection.commit()
 
 		elif request.form.get("dec","nothing")=='Change Plan':
-			query=("Select planid from plan")
+			query=("Select planid from plan where status='running'")
 			cursor.execute(query)
 			result=cursor.fetchall()
 
